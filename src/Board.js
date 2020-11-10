@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -79,7 +79,31 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      //o: boolean, if there is a conflict or not
+      //i: number, specific index of a piece
+      //c: no constraints
+      //e: if the board is empty
+      //explanation: if the board is empty, return false. We will find the rowIndex, iterate through the row, if there is a conflict (1), return true, else return false
+
+      //loop through inner array from given index (Board[index].length)
+      //if element isn't 0 , then counter variable + 1,
+      //outside the loop
+      //if the counter is greater than 1 , then there is a conflict, return true
+
+      //this.attributes[rowIndex]
+      console.log(this.attributes[rowIndex]);
+      var counter = 0;
+      for (var i = 0; i < this.attributes[rowIndex].length; i++) {
+        var row = this.attributes[rowIndex];
+        if (row[i] === 1) {
+          counter ++;
+        }
+      }
+      if (counter > 1) {
+        return true;
+      } else {
+        return false;
+      }
     },
 
     // test if any rows on this board contain conflicts
