@@ -99,7 +99,46 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+//o: a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+//i: an integer, n, 0-9, designating the size of the board
+//e: 2, 3 don't have solutions
+//explanation: the input determines first, the size of our board, and how many queens we'll need to place. Because they're queens, we need to test for row, column, major and minor diagonal collisions. If there are no collisions, we can place our queen, but we need to make sure number of queens = n (size of board). The output is our newBoard, with n pieces toggled, with no collisions.
+
+
+  var newBoard = new Board({'n': n}); //fixme
+  var solution = [];
+  if (n === 2 || n === 3) {
+    var edgeSolution = 0;
+    return edgeSolution;
+  }
+  var toggleFunction = function(startRow) {
+    var startRow = startRow || 0;
+    if (n === startRow) {
+      var countBoards = newBoard.rows();
+      var counter = 0;
+      for (var i = 0; i < countBoards.length; i ++){
+        for (var j = 0; j < countBoards[i].length; j ++) {
+          counter += countBoards[i][j];
+        }
+      }
+      if (counter === n || n === 0) {
+        solution.push(newBoard.rows());
+        return;
+      }
+    } else {
+      //if (startRow)
+      //starting index at something besides 0 but still looping the entire array https://stackoverflow.com/questions/28430348/how-to-loop-through-arrays-starting-at-different-index-while-still-looping-throu
+      for (var i = 0; i <= n; i ++) {
+        newBoard.togglePiece(startRow, i);
+        if (!newBoard.hasAnyQueensConflicts()) {
+          toggleFunction(startRow + 1);
+        }
+        newBoard.togglePiece(startRow, i);
+      }
+    }
+  };
+
+  var solution = toggleFunction();
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
