@@ -116,7 +116,7 @@ window.findNQueensSolution = function(n) {
     if (n === startRow) {
       var countBoards = newBoard.rows();
       var counter = 0;
-      for (var i = 0; i < countBoards.length; i ++){
+      for (var i = 0; i < countBoards.length; i ++) {
         for (var j = 0; j < countBoards[i].length; j ++) {
           counter += countBoards[i][j];
         }
