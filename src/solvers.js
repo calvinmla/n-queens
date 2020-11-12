@@ -15,7 +15,7 @@
 
 
 
-window.findNRooksSolution = function(n, startRow) {
+window.findNRooksSolution = function(n) {
   //o: return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
   //i: an integer ranging from 1 - 8
   //e: non number, 0, or greated than 8
@@ -25,7 +25,7 @@ window.findNRooksSolution = function(n, startRow) {
   //our input a number "n" which is equal to our row count, col count, and rook count. the function would create a martix where we would iterate through the board and make sure there are no conflicts with the placements of our n rooks by calling the any row and column conflicts helper functions after each placement
   //array of arrays = [];
   //do a loop to tooggle pieces in row
-  var solution = undefined; //fixme
+  var newBoard = new Board({'n': n}); //fixme
 
 
   // [0, 0, 0, 0], but now we want to find nRooks Solution
@@ -38,6 +38,27 @@ window.findNRooksSolution = function(n, startRow) {
   // [0, 0, 1, 0], beginning at firstRow, and firstIndex
   // [0, 0, 0, 1]
   //start a loop for (var i = 0; i < n; i ++) to track rows
+  var toggleFunction = function(startRow) {
+    var startRow = startRow || 0;
+    if (n === startRow) {
+      return newBoard.rows();
+    } else {
+      for (var i = 0; i < n; i ++) {
+        newBoard.togglePiece(startRow, i);
+        if (!newBoard.hasAnyRooksConflicts()) {
+          return toggleFunction(startRow + 1);
+        }
+        // if there is a conflict, toggle new piece
+        newBoard.togglePiece(startRow, i);
+      }
+
+    }
+  };
+
+  var solution = toggleFunction();
+
+
+  //findNRooksSolution(n = 6, startRow = 0)
   //toggle Piece on board
   //couldnt increment startRow in accordance with index
   //this.togglePiece(startRow, Index (i));
@@ -51,7 +72,26 @@ window.findNRooksSolution = function(n, startRow) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0; //fixme
+  var newBoard = new Board({'n': n});
+
+  var toggleFunction = function(startRow) {
+    var startRow = startRow || 0;
+    if (n === startRow) {
+      solutionCount ++;
+    } else {
+      for (var i = 0; i < n; i ++) {
+        newBoard.togglePiece(startRow, i);
+        if (!newBoard.hasAnyRooksConflicts()) {
+          toggleFunction(startRow + 1);
+        }
+        // if there is a conflict, toggle new piece
+        newBoard.togglePiece(startRow, i);
+      }
+    }
+  };
+
+  toggleFunction();
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
