@@ -15,7 +15,7 @@
 
 
 
-window.findNRooksSolution = function(n) {
+window.findNRooksSolution = function (n) {
   //o: return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
   //i: an integer ranging from 1 - 8
   //e: non number, 0, or greated than 8
@@ -25,7 +25,7 @@ window.findNRooksSolution = function(n) {
   //our input a number "n" which is equal to our row count, col count, and rook count. the function would create a martix where we would iterate through the board and make sure there are no conflicts with the placements of our n rooks by calling the any row and column conflicts helper functions after each placement
   //array of arrays = [];
   //do a loop to tooggle pieces in row
-  var newBoard = new Board({'n': n}); //fixme
+  var newBoard = new Board({ 'n': n }); //fixme
 
 
   // [0, 0, 0, 0], but now we want to find nRooks Solution
@@ -38,12 +38,12 @@ window.findNRooksSolution = function(n) {
   // [0, 0, 1, 0], beginning at firstRow, and firstIndex
   // [0, 0, 0, 1]
   //start a loop for (var i = 0; i < n; i ++) to track rows
-  var toggleFunction = function(startRow) {
+  var toggleFunction = function (startRow) {
     var startRow = startRow || 0;
     if (n === startRow) {
       return newBoard.rows();
     } else {
-      for (var i = 0; i < n; i ++) {
+      for (var i = 0; i < n; i++) {
         newBoard.togglePiece(startRow, i);
         if (!newBoard.hasAnyRooksConflicts()) {
           return toggleFunction(startRow + 1);
@@ -71,16 +71,16 @@ window.findNRooksSolution = function(n) {
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) {
+window.countNRooksSolutions = function (n) {
   var solutionCount = 0; //fixme
-  var newBoard = new Board({'n': n});
+  var newBoard = new Board({ 'n': n });
 
-  var toggleFunction = function(startRow) {
+  var toggleFunction = function (startRow) {
     var startRow = startRow || 0;
     if (n === startRow) {
-      solutionCount ++;
+      solutionCount++;
     } else {
-      for (var i = 0; i < n; i ++) {
+      for (var i = 0; i < n; i++) {
         newBoard.togglePiece(startRow, i);
         if (!newBoard.hasAnyRooksConflicts()) {
           toggleFunction(startRow + 1);
@@ -98,55 +98,65 @@ window.countNRooksSolutions = function(n) {
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-window.findNQueensSolution = function(n) {
-//o: a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-//i: an integer, n, 0-9, designating the size of the board
-//e: 2, 3 don't have solutions
-//explanation: the input determines first, the size of our board, and how many queens we'll need to place. Because they're queens, we need to test for row, column, major and minor diagonal collisions. If there are no collisions, we can place our queen, but we need to make sure number of queens = n (size of board). The output is our newBoard, with n pieces toggled, with no collisions.
+window.findNQueensSolution = function (n) {
+  //o: a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+  //i: an integer, n, 0-9, designating the size of the board
+  //e: 2, 3 don't have solutions
+  //explanation: the input determines first, the size of our board, and how many queens we'll need to place. Because they're queens, we need to test for row, column, major and minor diagonal collisions. If there are no collisions, we can place our queen, but we need to make sure number of queens = n (size of board). The output is our newBoard, with n pieces toggled, with no collisions.
 
 
-  var newBoard = new Board({'n': n}); //fixme
-  var solution = [];
-  if (n === 2 || n === 3) {
-    var edgeSolution = 0;
-    return edgeSolution;
-  }
-  var toggleFunction = function(startRow) {
-    var startRow = startRow || 0;
-    if (n === startRow) {
-      var countBoards = newBoard.rows();
-      var counter = 0;
-      for (var i = 0; i < countBoards.length; i ++) {
-        for (var j = 0; j < countBoards[i].length; j ++) {
-          counter += countBoards[i][j];
+  var newBoard = new Board({ 'n': n }); //fixme
+
+  var testCase = function (backTrackVar) {
+    var startRow = backTrackVar;
+    if (backTrackVar === n) {
+      return true;
+    }
+    for (var i = 0; i < n; i++) {
+      newBoard.togglePiece(startRow, i);
+      backTrackVar++;
+      if (!newBoard.hasAnyQueenConflictsOn(startRow, i)) {
+        if (testCase(backTrackVar)) {
+          return true;
         }
+
       }
-      if (counter === n || n === 0) {
-        solution.push(newBoard.rows());
-        return;
-      }
-    } else {
-      //if (startRow)
-      //starting index at something besides 0 but still looping the entire array https://stackoverflow.com/questions/28430348/how-to-loop-through-arrays-starting-at-different-index-while-still-looping-throu
-      for (var i = 0; i <= n; i ++) {
-        newBoard.togglePiece(startRow, i);
-        if (!newBoard.hasAnyQueensConflicts()) {
-          toggleFunction(startRow + 1);
-        }
-        newBoard.togglePiece(startRow, i);
-      }
+      newBoard.togglePiece(startRow, i);
+      backTrackVar--;
     }
   };
 
-  var solution = toggleFunction();
+  testCase(0);
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(newBoard.rows()));
+  return newBoard.rows();
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
-window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+window.countNQueensSolutions = function (n) {
+  var solutionCount = 0; //fixme
+  var newBoard = new Board({ 'n': n }); //fixme
+
+  var testCase = function (backTrackVar) {
+    var startRow = backTrackVar;
+    if (backTrackVar === n) {
+      solutionCount++;
+      return;
+    }
+    for (var i = 0; i < n; i++) {
+      newBoard.togglePiece(startRow, i);
+      backTrackVar++;
+      if (!newBoard.hasAnyQueenConflictsOn(startRow, i)) {
+        testCase(backTrackVar);
+
+      }
+      newBoard.togglePiece(startRow, i);
+      backTrackVar--;
+    }
+  };
+
+  testCase(0);
+
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
